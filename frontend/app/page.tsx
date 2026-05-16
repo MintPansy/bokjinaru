@@ -1,37 +1,36 @@
 import Link from "next/link";
-import { ApiConnectionBanner } from "./components/ApiConnectionBanner";
+import { MockDataBanner } from "./components/MockDataBanner";
 import { ServiceCard } from "./components/ServiceCard";
 import { toServiceCardItem } from "./lib/mappers";
 import { DISABILITY_TYPES, STEPS, SUPPORT_FIELDS } from "./lib/constants";
-import { getServices, getStats } from "./services/api";
+import {
+  getServicesWithFallback,
+  getStatsWithFallback,
+} from "./services/api-with-fallback";
 
 export default async function HomePage() {
-  let featured: ReturnType<typeof toServiceCardItem>[] = [];
-  let statItems = [
-    { value: "—", label: "안내 중인 복지 서비스" },
-    { value: "—", label: "전국 시·도 단위 지역 정보" },
-    { value: "—", label: "장애유형별 맞춤 분류" },
-  ];
-  let apiError = false;
+  const [servicesResult, statsResult] = await Promise.all([
+    getServicesWithFallback(),
+    getStatsWithFallback(),
+  ]);
 
-  try {
-    const [services, stats] = await Promise.all([getServices(), getStats()]);
-    featured = services.items.slice(0, 3).map(toServiceCardItem);
-    statItems = [
-      { value: `${stats.serviceCount}+`, label: "안내 중인 복지 서비스" },
-      { value: String(stats.regionCount), label: "전국 시·도 단위 지역 정보" },
-      {
-        value: String(stats.disabilityTypeCount),
-        label: "장애유형별 맞춤 분류",
-      },
-    ];
-  } catch {
-    apiError = true;
-  }
+  const featured = servicesResult.data.items.slice(0, 3).map(toServiceCardItem);
+  const stats = statsResult.data;
+  const useMock =
+    servicesResult.source === "mock" || statsResult.source === "mock";
+
+  const statItems = [
+    { value: `${stats.serviceCount}+`, label: "안내 중인 복지 서비스" },
+    { value: String(stats.regionCount), label: "전국 시·도 단위 지역 정보" },
+    {
+      value: String(stats.disabilityTypeCount),
+      label: "장애유형별 맞춤 분류",
+    },
+  ];
 
   return (
     <>
-      {apiError && <ApiConnectionBanner />}
+      {useMock && <MockDataBanner />}
       <section className="hero">
         <div className="container">
           <span className="hero__badge">장애인 복지서비스 통합 안내</span>
@@ -127,15 +126,11 @@ export default async function HomePage() {
               모든 서비스 보기 →
             </Link>
           </div>
-          {featured.length > 0 ? (
-            <div className="card-grid">
-              {featured.map((s) => (
-                <ServiceCard key={s.id} service={s} />
-              ))}
-            </div>
-          ) : (
-            <p>표시할 서비스가 없습니다.</p>
-          )}
+          <div className="card-grid">
+            {featured.map((s) => (
+              <ServiceCard key={s.id} service={s} />
+            ))}
+          </div>
           <div className="stats" aria-label="서비스 통계">
             {statItems.map((stat) => (
               <div key={stat.label}>
@@ -152,8 +147,8 @@ export default async function HomePage() {
           <div className="cta-box">
             <h3>현장 상담이 필요하신가요?</h3>
             <p>
-              읍·면·동 행정복지센터 또는 가까운 장애인복지관에서 대면 상담을 받을
-              수 있습니다.
+              읍·면·동 행정복지센터 또는 가까운 장애인복지관에서 대면 상담을
+              받을 수 있습니다.
             </p>
             <Link href="/organizations" className="btn btn--primary">
               지원 기관 찾기

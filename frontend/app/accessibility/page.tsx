@@ -1,5 +1,6 @@
 import Link from "next/link";
-import { getStats } from "../services/api";
+import { MockDataBanner } from "../components/MockDataBanner";
+import { getStatsWithFallback } from "../services/api-with-fallback";
 
 const ITEMS = [
   {
@@ -21,16 +22,15 @@ const ITEMS = [
 ];
 
 export default async function AccessibilityPage() {
-  let statsText = "";
-  try {
-    const stats = await getStats();
-    statsText = `현재 ${stats.serviceCount}개 서비스, ${stats.regionCount}개 지역, ${stats.disabilityTypeCount}개 장애유형 분류를 안내합니다.`;
-  } catch {
-    statsText = "통계 정보는 백엔드 연결 후 표시됩니다.";
-  }
+  const { data: stats, source } = await getStatsWithFallback();
+  const statsText =
+    source === "mock"
+      ? `예시 기준: ${stats.serviceCount}개 서비스, ${stats.regionCount}개 지역, ${stats.disabilityTypeCount}개 장애유형 분류를 안내합니다.`
+      : `현재 ${stats.serviceCount}개 서비스, ${stats.regionCount}개 지역, ${stats.disabilityTypeCount}개 장애유형 분류를 안내합니다.`;
 
   return (
     <>
+      {source === "mock" && <MockDataBanner compact />}
       <header className="page-header">
         <div className="container">
           <h1>접근성 안내</h1>

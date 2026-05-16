@@ -3,10 +3,14 @@
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { Suspense, useEffect, useState } from "react";
+import { MockDataBanner } from "../components/MockDataBanner";
 import { ServiceCard } from "../components/ServiceCard";
 import { toServiceCardItem } from "../lib/mappers";
 import { AGE_GROUPS, DISABILITY_TYPES, REGIONS, SUPPORT_FIELDS } from "../lib/constants";
-import { getFiltersClient, getServicesClient } from "../services/api";
+import {
+  getFiltersClientWithFallback,
+  getServicesClientWithFallback,
+} from "../services/api-with-fallback";
 import type { CodeLabel } from "../types/api";
 import type { WelfareServiceItem } from "../lib/constants";
 
@@ -21,7 +25,7 @@ function SearchContent() {
   const [results, setResults] = useState<WelfareServiceItem[]>([]);
   const [total, setTotal] = useState(0);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const [useMock, setUseMock] = useState(false);
   const [filters, setFilters] = useState<{
     disability: CodeLabel[];
     support: CodeLabel[];
@@ -29,46 +33,33 @@ function SearchContent() {
     region: CodeLabel[];
   } | null>(null);
 
+  const searchParams = {
+    disabilityType: disabilityType || undefined,
+    supportType: supportType || undefined,
+    ageGroup: ageGroup || undefined,
+    region: region || undefined,
+    q: q || undefined,
+  };
+
   useEffect(() => {
-    getFiltersClient()
-      .then((m) =>
-        setFilters({
-          disability: m.disabilityTypes,
-          support: m.supportTypes,
-          age: m.ageGroups,
-          region: m.regions,
-        })
-      )
-      .catch(() =>
-        setFilters({
-          disability: [...DISABILITY_TYPES],
-          support: [...SUPPORT_FIELDS],
-          age: [...AGE_GROUPS],
-          region: [...REGIONS],
-        })
-      );
+    getFiltersClientWithFallback().then(({ data, source }) => {
+      setFilters({
+        disability: data.disabilityTypes,
+        support: data.supportTypes,
+        age: data.ageGroups,
+        region: data.regions,
+      });
+      if (source === "mock") setUseMock(true);
+    });
   }, []);
 
   useEffect(() => {
     setLoading(true);
-    setError(null);
-    getServicesClient({
-      disabilityType: disabilityType || undefined,
-      supportType: supportType || undefined,
-      ageGroup: ageGroup || undefined,
-      region: region || undefined,
-      q: q || undefined,
-    })
-      .then((res) => {
-        setResults(res.items.map(toServiceCardItem));
-        setTotal(res.total);
-      })
-      .catch(() => {
-        setError(
-          "서비스 목록을 불러오지 못했습니다. API 주소·CORS·Vercel 환경 변수를 확인해 주세요."
-        );
-        setResults([]);
-        setTotal(0);
+    getServicesClientWithFallback(searchParams)
+      .then(({ data, source }) => {
+        setResults(data.items.map(toServiceCardItem));
+        setTotal(data.total);
+        if (source === "mock") setUseMock(true);
       })
       .finally(() => setLoading(false));
   }, [disabilityType, supportType, ageGroup, region, q]);
@@ -88,6 +79,7 @@ function SearchContent() {
       </header>
 
       <section className="container section" style={{ paddingTop: 0 }}>
+        {useMock && <MockDataBanner compact />}
         <form className="filter-panel" action="/search" method="get">
           <fieldset>
             <legend>장애유형</legend>
@@ -153,12 +145,6 @@ function SearchContent() {
           </button>
         </form>
 
-        {error && (
-          <p role="alert" style={{ color: "#b42318" }}>
-            {error}
-          </p>
-        )}
-
         <p aria-live="polite">
           {loading ? (
             "검색 중…"
@@ -174,6 +160,9 @@ function SearchContent() {
               <ServiceCard key={s.id} service={s} />
             ))}
           </div>
+        )}
+        {!loading && total === 0 && (
+          <p>조건에 맞는 서비스가 없습니다. 필터를 넓혀 다시 검색해 보세요.</p>
         )}
         <p style={{ marginTop: "2rem" }}>
           <Link href="/">← 홈으로</Link>

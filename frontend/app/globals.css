@@ -664,6 +664,28 @@ button:focus-visible {
   }
 }
 
+.mock-data-banner-wrap {
+  padding-top: 1rem;
+  padding-bottom: 0.25rem;
+}
+
+.mock-data-banner {
+  background: #fffbeb;
+  border: 1px solid #f0d78c;
+  border-radius: var(--radius);
+  padding: 1rem 1.25rem;
+  color: var(--text);
+}
+
+.mock-data-banner--compact {
+  background: #fffbeb;
+  border: 1px solid #f0d78c;
+  border-radius: 8px;
+  padding: 0.65rem 1rem;
+  margin-bottom: 1rem;
+  font-size: 0.95rem;
+}
+
 @media (max-width: 640px) {
   .stats {
     grid-template-columns: 1fr;

@@ -1,17 +1,9 @@
 import Link from "next/link";
-import { ApiConnectionBanner } from "../components/ApiConnectionBanner";
-import { getOrganizations } from "../services/api";
+import { MockDataBanner } from "../components/MockDataBanner";
+import { getOrganizationsWithFallback } from "../services/api-with-fallback";
 
 export default async function OrganizationsPage() {
-  let items: Awaited<ReturnType<typeof getOrganizations>>["items"] = [];
-  let error = false;
-
-  try {
-    const res = await getOrganizations();
-    items = res.items;
-  } catch {
-    error = true;
-  }
+  const { data, source } = await getOrganizationsWithFallback();
 
   return (
     <>
@@ -22,9 +14,9 @@ export default async function OrganizationsPage() {
         </div>
       </header>
       <section className="container section" style={{ paddingTop: 0 }}>
-        {error && <ApiConnectionBanner />}
+        {source === "mock" && <MockDataBanner compact />}
         <ul className="card-grid" style={{ listStyle: "none", padding: 0 }}>
-          {items.map((org) => (
+          {data.items.map((org) => (
             <li key={org.id} className="service-card">
               <span className="badge">{org.regionLabel ?? org.region}</span>
               <h3>
@@ -35,7 +27,7 @@ export default async function OrganizationsPage() {
             </li>
           ))}
         </ul>
-        {!error && items.length === 0 && <p>등록된 기관이 없습니다.</p>}
+        {data.items.length === 0 && <p>등록된 기관이 없습니다.</p>}
         <p style={{ marginTop: "2rem" }}>
           <Link href="/">← 홈으로</Link>
         </p>

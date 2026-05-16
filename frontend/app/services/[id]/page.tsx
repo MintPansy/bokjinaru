@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { getServiceById } from "../../services/api";
+import { MockDataBanner } from "../../components/MockDataBanner";
+import { getServiceByIdWithFallback } from "../../services/api-with-fallback";
 
 const SUPPORT_LABELS: Record<string, string> = {
   INCOME: "소득지원",
@@ -17,18 +18,16 @@ type Props = { params: Promise<{ id: string }> };
 
 export default async function ServiceDetailPage({ params }: Props) {
   const { id } = await params;
-  let service;
-  try {
-    service = await getServiceById(id);
-  } catch {
-    notFound();
-  }
+  const { data: service, source } = await getServiceByIdWithFallback(id);
+
+  if (!service) notFound();
 
   const category =
     service.supportTypes.map((t) => SUPPORT_LABELS[t] ?? t)[0] ?? "복지";
 
   return (
     <>
+      {source === "mock" && <MockDataBanner compact />}
       <header className="page-header">
         <div className="container">
           <p className="section__eyebrow">{category}</p>
@@ -50,10 +49,10 @@ export default async function ServiceDetailPage({ params }: Props) {
           <h2>지원 대상</h2>
           <p>{service.eligibility}</p>
         </div>
-        <section className="step-card" style={{ marginTop: "1rem" }}>
+        <div className="step-card" style={{ marginTop: "1rem" }}>
           <h2>신청 방법</h2>
           <p>{service.applicationMethod}</p>
-        </section>
+        </div>
         {service.requiredDocuments.length > 0 && (
           <div className="step-card" style={{ marginTop: "1rem" }}>
             <h2>필요 서류</h2>
@@ -74,7 +73,7 @@ export default async function ServiceDetailPage({ params }: Props) {
               </Link>
             </p>
           )}
-        </div>
+        </motion>
         {service.relatedLinks.length > 0 && (
           <div className="step-card" style={{ marginTop: "1rem" }}>
             <h2>관련 링크</h2>
@@ -87,7 +86,7 @@ export default async function ServiceDetailPage({ params }: Props) {
                 </li>
               ))}
             </ul>
-          </div>
+          </motion>
         )}
         <p style={{ marginTop: "2rem" }}>
           <Link href="/search">← 서비스 목록</Link>
