@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { ApiConnectionBanner } from "./components/ApiConnectionBanner";
 import { ServiceCard } from "./components/ServiceCard";
 import { toServiceCardItem } from "./lib/mappers";
 import { DISABILITY_TYPES, STEPS, SUPPORT_FIELDS } from "./lib/constants";
@@ -30,12 +31,7 @@ export default async function HomePage() {
 
   return (
     <>
-      {apiError && (
-        <p className="container" role="alert" style={{ paddingTop: "1rem" }}>
-          백엔드에 연결할 수 없습니다.{" "}
-          <code>backend/app/bokjinaru</code>에서 API를 실행해 주세요 (포트 8080).
-        </p>
-      )}
+      {apiError && <ApiConnectionBanner />}
       <section className="hero">
         <div className="container">
           <span className="hero__badge">장애인 복지서비스 통합 안내</span>

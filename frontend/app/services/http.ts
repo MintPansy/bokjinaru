@@ -1,4 +1,4 @@
-const baseUrl = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8080";
+import { getApiBaseUrl } from "../lib/api-config";
 
 const TOKEN_KEY = "bokjinaru_token";
 
@@ -13,6 +13,12 @@ export function setStoredToken(token: string | null) {
   else localStorage.removeItem(TOKEN_KEY);
 }
 
+function buildUrl(path: string): string {
+  const base = getApiBaseUrl();
+  const normalizedPath = path.startsWith("/") ? path : `/${path}`;
+  return `${base}${normalizedPath}`;
+}
+
 export async function http<T>(path: string, init?: RequestInit): Promise<T> {
   const token = getStoredToken();
   const headers: HeadersInit = {
@@ -23,7 +29,7 @@ export async function http<T>(path: string, init?: RequestInit): Promise<T> {
     (headers as Record<string, string>)["Authorization"] = `Bearer ${token}`;
   }
 
-  const res = await fetch(`${baseUrl}${path}`, {
+  const res = await fetch(buildUrl(path), {
     ...init,
     headers,
   });
@@ -38,7 +44,7 @@ export async function http<T>(path: string, init?: RequestInit): Promise<T> {
 }
 
 export async function serverHttp<T>(path: string): Promise<T> {
-  const res = await fetch(`${baseUrl}${path}`, {
+  const res = await fetch(buildUrl(path), {
     next: { revalidate: 30 },
   });
   if (!res.ok) throw new Error(`HTTP ${res.status}: ${path}`);

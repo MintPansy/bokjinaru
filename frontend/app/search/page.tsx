@@ -64,7 +64,9 @@ function SearchContent() {
         setTotal(res.total);
       })
       .catch(() => {
-        setError("서비스 목록을 불러오지 못했습니다. 백엔드(8080)를 확인해 주세요.");
+        setError(
+          "서비스 목록을 불러오지 못했습니다. API 주소·CORS·Vercel 환경 변수를 확인해 주세요."
+        );
         setResults([]);
         setTotal(0);
       })

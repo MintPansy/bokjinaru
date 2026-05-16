@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { ApiConnectionBanner } from "../components/ApiConnectionBanner";
 import { getOrganizations } from "../services/api";
 
 export default async function OrganizationsPage() {
@@ -21,9 +22,7 @@ export default async function OrganizationsPage() {
         </div>
       </header>
       <section className="container section" style={{ paddingTop: 0 }}>
-        {error && (
-          <p role="alert">기관 목록을 불러오지 못했습니다. 백엔드를 확인해 주세요.</p>
-        )}
+        {error && <ApiConnectionBanner />}
         <ul className="card-grid" style={{ listStyle: "none", padding: 0 }}>
           {items.map((org) => (
             <li key={org.id} className="service-card">

@@ -21,7 +21,9 @@ function DemoLoginFormInner() {
       const redirect = searchParams.get("redirect") || "/mypage";
       router.push(redirect);
     } catch {
-      setError("로그인에 실패했습니다. 백엔드(8080)가 실행 중인지 확인해 주세요.");
+      setError(
+        "로그인에 실패했습니다. NEXT_PUBLIC_API_URL과 Railway API 상태를 확인해 주세요."
+      );
     } finally {
       setLoading(false);
     }
