@@ -118,7 +118,7 @@ function extractResultMeta(parsed: unknown): {
   return { resultCode, resultMessage, totalCount };
 }
 
-function extractServListRaw(parsed: unknown): unknown[] {
+function extractServListRaw(parsed: unknown): Record<string, unknown>[] {
   const servList = pickFirst(parsed, ["servList", "ServList", "servlist"]);
   const items = normalizeArray<Record<string, unknown>>(servList);
 
