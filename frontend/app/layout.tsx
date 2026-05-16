@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { AuthHydrator } from "./components/AuthHydrator";
 import { Header } from "./components/Header";
 import { Footer } from "./components/Footer";
 import { SITE_NAME } from "./lib/constants";
@@ -19,8 +20,9 @@ export default function RootLayout({
         <a className="skip-link" href="#main-content">
           본문 바로가기
         </a>
+        <AuthHydrator />
         <Header />
-        <section id="main-content">{children}</section>
+        <div id="main-content">{children}</div>
         <Footer />
       </body>
     </html>

@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { getStats } from "../services/api";
 
 const ITEMS = [
   {
@@ -19,7 +20,15 @@ const ITEMS = [
   },
 ];
 
-export default function AccessibilityPage() {
+export default async function AccessibilityPage() {
+  let statsText = "";
+  try {
+    const stats = await getStats();
+    statsText = `현재 ${stats.serviceCount}개 서비스, ${stats.regionCount}개 지역, ${stats.disabilityTypeCount}개 장애유형 분류를 안내합니다.`;
+  } catch {
+    statsText = "통계 정보는 백엔드 연결 후 표시됩니다.";
+  }
+
   return (
     <>
       <header className="page-header">
@@ -29,6 +38,7 @@ export default function AccessibilityPage() {
         </div>
       </header>
       <section className="container section" style={{ paddingTop: 0 }}>
+        <p className="section__desc">{statsText}</p>
         <ul className="steps" style={{ listStyle: "none" }}>
           {ITEMS.map((item) => (
             <li key={item.title} className="step-card">

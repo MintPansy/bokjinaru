@@ -4,10 +4,12 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
 import { NAV_ITEMS, SITE_NAME } from "../lib/constants";
+import { useAuthStore } from "../store/useAuthStore";
 
 export function Header() {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
+  const { token, user, logout, hydrated } = useAuthStore();
 
   return (
     <header className="site-header">
@@ -32,11 +34,26 @@ export function Header() {
               {item.label}
             </Link>
           ))}
+          {hydrated && token && (
+            <Link
+              href="/mypage"
+              aria-current={pathname === "/mypage" ? "page" : undefined}
+            >
+              마이페이지
+            </Link>
+          )}
         </nav>
 
-        <Link href="/search" className="btn btn--primary header-cta">
-          서비스 찾기
-        </Link>
+        <div style={{ display: "flex", gap: "0.5rem", alignItems: "center" }}>
+          {hydrated && !token && (
+            <Link href="/login" className="btn btn--ghost header-cta">
+              로그인
+            </Link>
+          )}
+          <Link href="/search" className="btn btn--primary header-cta">
+            서비스 찾기
+          </Link>
+        </div>
 
         <button
           type="button"
@@ -59,12 +76,32 @@ export function Header() {
             <Link
               key={item.href}
               href={item.href}
-              aria-current={pathname === item.href ? "page" : undefined}
               onClick={() => setOpen(false)}
             >
               {item.label}
             </Link>
           ))}
+          {hydrated && token ? (
+            <>
+              <Link href="/mypage" onClick={() => setOpen(false)}>
+                마이페이지 ({user?.name})
+              </Link>
+              <button
+                type="button"
+                className="btn btn--ghost"
+                onClick={() => {
+                  logout();
+                  setOpen(false);
+                }}
+              >
+                로그아웃
+              </button>
+            </>
+          ) : (
+            <Link href="/login" onClick={() => setOpen(false)}>
+              로그인
+            </Link>
+          )}
           <Link href="/search" className="btn btn--primary" onClick={() => setOpen(false)}>
             서비스 찾기
           </Link>

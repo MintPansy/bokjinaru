@@ -1,37 +1,17 @@
 import Link from "next/link";
+import { getOrganizations } from "../services/api";
 
-const ORGS = [
-  {
-    id: "1",
-    name: "서울시립 발달장애인종합지원센터",
-    region: "서울",
-    phone: "02-2133-3691",
-    services: 3,
-  },
-  {
-    id: "2",
-    name: "경기도장애인복지종합지원센터",
-    region: "경기",
-    phone: "031-249-9114",
-    services: 4,
-  },
-  {
-    id: "3",
-    name: "부산시 장애인일자리지원센터",
-    region: "부산",
-    phone: "051-888-1200",
-    services: 2,
-  },
-  {
-    id: "4",
-    name: "대한시각장애인연합회",
-    region: "전국",
-    phone: "02-717-1004",
-    services: 2,
-  },
-];
+export default async function OrganizationsPage() {
+  let items: Awaited<ReturnType<typeof getOrganizations>>["items"] = [];
+  let error = false;
 
-export default function OrganizationsPage() {
+  try {
+    const res = await getOrganizations();
+    items = res.items;
+  } catch {
+    error = true;
+  }
+
   return (
     <>
       <header className="page-header">
@@ -41,18 +21,22 @@ export default function OrganizationsPage() {
         </div>
       </header>
       <section className="container section" style={{ paddingTop: 0 }}>
+        {error && (
+          <p role="alert">기관 목록을 불러오지 못했습니다. 백엔드를 확인해 주세요.</p>
+        )}
         <ul className="card-grid" style={{ listStyle: "none", padding: 0 }}>
-          {ORGS.map((org) => (
+          {items.map((org) => (
             <li key={org.id} className="service-card">
-              <span className="badge">{org.region}</span>
-              <h3>{org.name}</h3>
-              <p className="service-card__summary">
-                안내 서비스 {org.services}건 · {org.phone}
-              </p>
+              <span className="badge">{org.regionLabel ?? org.region}</span>
+              <h3>
+                <Link href={`/organizations/${org.id}`}>{org.name}</Link>
+              </h3>
+              <p className="service-card__summary">{org.phone}</p>
               <Link href={`tel:${org.phone.replace(/-/g, "")}`}>전화 문의</Link>
             </li>
           ))}
         </ul>
+        {!error && items.length === 0 && <p>등록된 기관이 없습니다.</p>}
         <p style={{ marginTop: "2rem" }}>
           <Link href="/">← 홈으로</Link>
         </p>
