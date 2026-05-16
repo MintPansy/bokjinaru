@@ -3,6 +3,7 @@ export const SITE_NAME = "복지나루";
 export const NAV_ITEMS = [
   { href: "/", label: "홈" },
   { href: "/search", label: "서비스 찾기" },
+  { href: "/disabled-facilities", label: "편의시설" },
   { href: "/organizations", label: "지원 기관" },
   { href: "/accessibility", label: "접근성 안내" },
 ] as const;
