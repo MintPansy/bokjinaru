@@ -1,11 +1,13 @@
 import type { Metadata } from "next";
 import { Header } from "./components/Header";
 import { Footer } from "./components/Footer";
+import { SITE_NAME } from "./lib/constants";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "복지 서비스 길잡이",
-  description: "조건에 맞는 복지 서비스와 기관을 찾습니다.",
+  title: `${SITE_NAME} — 나에게 맞는 장애인 복지서비스를 찾는 가장 빠른 길`,
+  description:
+    "장애유형, 연령, 지역, 지원 분야를 선택하면 신청할 수 있는 공공 복지서비스와 담당 기관을 한 번에 확인할 수 있습니다.",
 };
 
 export default function RootLayout({
@@ -15,10 +17,10 @@ export default function RootLayout({
     <html lang="ko">
       <body>
         <a className="skip-link" href="#main-content">
-          본문으로 건너뛰기
+          본문 바로가기
         </a>
         <Header />
-        <main id="main-content">{children}</main>
+        <section id="main-content">{children}</section>
         <Footer />
       </body>
     </html>
