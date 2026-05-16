@@ -22,11 +22,12 @@
 |------|------|------|
 | `PORT` | (Railway 자동 주입) | 수동 설정 불필요 |
 | `WELFARE_CORS_ALLOWED_ORIGINS` | `https://bokjinaru.vercel.app,http://localhost:3000` | 프론트 도메인 |
+| `ODCLOUD_SERVICE_KEY` | 공공데이터포털 인증키 | 있으면 복지서비스 공공 API 로드 (`dataSource: odcloud`) |
 
 ## 배포 후 확인
 
 1. Railway → 서비스 → **Settings** → **Networking** → **Generate Domain**
-2. 브라우저: `https://<your-domain>/api/health` → `{"status":"ok"}`
+2. 브라우저: `https://<your-domain>/api/health` → `{"status":"ok","dataSource":"odcloud"}` (키 설정 시)
 3. Vercel `NEXT_PUBLIC_API_URL`에 위 도메인 설정 (https 포함)
 
 ## 로컬 Docker 테스트

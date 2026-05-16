@@ -12,6 +12,7 @@ import kr.welfareguide.domain.SupportType;
 import kr.welfareguide.dto.FilterMetaResponse;
 import kr.welfareguide.dto.FilterOptionDto;
 import kr.welfareguide.dto.StatsResponse;
+import kr.welfareguide.data.DataSourceHolder;
 import kr.welfareguide.repository.WelfareServiceRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -21,6 +22,7 @@ import org.springframework.stereotype.Service;
 public class MetaService {
 
     private final WelfareServiceRepository welfareServiceRepository;
+    private final DataSourceHolder dataSourceHolder;
 
     public FilterMetaResponse getFilters() {
         return FilterMetaResponse.builder()
@@ -46,6 +48,7 @@ public class MetaService {
                 .serviceCount(services.size())
                 .regionCount(regions.size())
                 .disabilityTypeCount(disabilityTypes.size())
+                .dataSource(dataSourceHolder.getSource())
                 .build();
     }
 

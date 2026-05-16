@@ -47,11 +47,19 @@ public class WelfareServiceService {
     }
 
     private boolean matchesDisabilityType(WelfareService service, DisabilityType disabilityType) {
-        return disabilityType == null || service.getDisabilityTypes().contains(disabilityType);
+        if (disabilityType == null) {
+            return true;
+        }
+        var types = service.getDisabilityTypes();
+        return types == null || types.isEmpty() || types.contains(disabilityType);
     }
 
     private boolean matchesAgeGroup(WelfareService service, AgeGroup ageGroup) {
-        return ageGroup == null || service.getAgeGroups().contains(ageGroup);
+        if (ageGroup == null) {
+            return true;
+        }
+        var groups = service.getAgeGroups();
+        return groups == null || groups.isEmpty() || groups.contains(ageGroup);
     }
 
     private boolean matchesRegion(WelfareService service, Region region) {
@@ -63,7 +71,11 @@ public class WelfareServiceService {
     }
 
     private boolean matchesSupportType(WelfareService service, SupportType supportType) {
-        return supportType == null || service.getSupportTypes().contains(supportType);
+        if (supportType == null) {
+            return true;
+        }
+        var types = service.getSupportTypes();
+        return types == null || types.isEmpty() || types.contains(supportType);
     }
 
     private boolean matchesQuery(WelfareService service, String q) {

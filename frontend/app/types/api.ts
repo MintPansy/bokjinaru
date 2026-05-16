@@ -11,6 +11,8 @@ export type PlatformStats = {
   serviceCount: number;
   regionCount: number;
   disabilityTypeCount: number;
+  /** seed | odcloud — 백엔드 데이터 출처 */
+  dataSource?: string;
 };
 
 export type ServiceSummary = {

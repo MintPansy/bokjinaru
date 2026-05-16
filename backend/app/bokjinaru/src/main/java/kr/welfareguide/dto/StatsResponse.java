@@ -13,4 +13,6 @@ public class StatsResponse {
     private long serviceCount;
     private long regionCount;
     private long disabilityTypeCount;
+    /** seed | odcloud */
+    private String dataSource;
 }
