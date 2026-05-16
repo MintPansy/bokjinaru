@@ -1,0 +1,10 @@
+**/build
+**/.gradle
+**/bin
+**/.idea
+**/*.iml
+app/paperdot
+compose
+*.md
+.env
+.env.*

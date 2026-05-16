@@ -70,12 +70,21 @@ WELFARE_CORS_ALLOWED_ORIGINS=https://your-app.vercel.app,https://your-app-*.verc
 
 ---
 
-## Backend — Railway / Docker
+## Backend — Railway
 
-- Dockerfile: `backend/docker/Dockerfile`
-- Config: `backend/railway.json`
-- 로컬: `backend/compose/docker-compose.yml`
-- API: `backend/app/bokjinaru` — `BokjinaruApplication`
+**상세 가이드: [backend/RAILWAY.md](backend/RAILWAY.md)**
+
+1. Railway → New Project → GitHub repo
+2. **Root Directory = `backend`** (필수)
+3. Builder: **Dockerfile** (`docker/Dockerfile`)
+4. Variables:
+   ```env
+   WELFARE_CORS_ALLOWED_ORIGINS=https://your-app.vercel.app,http://localhost:3000
+   ```
+5. **Generate Domain** → `https://xxx.up.railway.app/api/health` 확인
+6. Vercel `NEXT_PUBLIC_API_URL`에 동일 도메인 설정
+
+로컬 Docker: `cd backend && docker build -f docker/Dockerfile -t bokjinaru-api .`
 
 ## 로컬 개발
 
