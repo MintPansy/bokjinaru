@@ -7,4 +7,5 @@ spring:
 
 welfare:
   cors:
-    allowed-origins: "http://localhost:3000"
+    # 쉼표 구분. Vercel: https://your-app.vercel.app
+    allowed-origins: "${WELFARE_CORS_ALLOWED_ORIGINS:http://localhost:3000}"

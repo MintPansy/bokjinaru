@@ -22,14 +22,10 @@ npm install
 npm run dev
 ```
 
-**백엔드** — `backend/app/paperdot`에서 Gradle로 실행 (Java 17 권장)
+**백엔드** — `backend/app/bokjinaru`에서 `BokjinaruApplication` 실행 (포트 8080)
 
-```bash
-cd backend/app/paperdot
-./gradlew bootRun
-```
-
-상세: [DEPLOY.md](./DEPLOY.md)
+**Vercel (프론트)** — Root Directory: `frontend`, env: `NEXT_PUBLIC_API_URL`  
+→ [DEPLOY.md](./DEPLOY.md) · [frontend/README.md](./frontend/README.md)
 
 ## 다음 단계
 
