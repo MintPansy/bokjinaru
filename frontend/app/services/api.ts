@@ -6,6 +6,7 @@ import type {
   PlatformStats,
   ServiceDetail,
   ServiceListResponse,
+  ServiceSearchParams,
   ServiceSummary,
 } from "../types/api";
 import { http, serverHttp } from "./http";
@@ -55,14 +56,6 @@ export async function getStats(): Promise<PlatformStats> {
 export async function getStatsClient(): Promise<PlatformStats> {
   return http<PlatformStats>("/api/v1/meta/stats");
 }
-
-export type ServiceSearchParams = {
-  disabilityType?: string;
-  ageGroup?: string;
-  region?: string;
-  supportType?: string;
-  q?: string;
-};
 
 function buildQuery(params?: ServiceSearchParams): string {
   if (!params) return "";

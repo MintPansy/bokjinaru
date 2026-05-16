@@ -31,6 +31,14 @@ export type ServiceListResponse = {
   total: number;
 };
 
+export type ServiceSearchParams = {
+  disabilityType?: string;
+  ageGroup?: string;
+  region?: string;
+  supportType?: string;
+  q?: string;
+};
+
 export type OrganizationSummary = {
   id: string;
   name: string;
