@@ -73,7 +73,7 @@ export default async function ServiceDetailPage({ params }: Props) {
               </Link>
             </p>
           )}
-        </motion>
+        </div>
         {service.relatedLinks.length > 0 && (
           <div className="step-card" style={{ marginTop: "1rem" }}>
             <h2>관련 링크</h2>
@@ -86,7 +86,7 @@ export default async function ServiceDetailPage({ params }: Props) {
                 </li>
               ))}
             </ul>
-          </motion>
+          </div>
         )}
         <p style={{ marginTop: "2rem" }}>
           <Link href="/search">← 서비스 목록</Link>

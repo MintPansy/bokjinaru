@@ -19,7 +19,7 @@ export default async function OrganizationDetailPage({ params }: Props) {
           <span className="badge">{org.region}</span>
           <h1>{org.name}</h1>
           <p>{org.description}</p>
-        </motion>
+        </div>
       </header>
       <article className="container section" style={{ paddingTop: 0 }}>
         <div className="step-card">
@@ -37,7 +37,7 @@ export default async function OrganizationDetailPage({ params }: Props) {
               </a>
             </p>
           )}
-        </motion>
+        </div>
         {org.services.length > 0 && (
           <div className="step-card" style={{ marginTop: "1rem" }}>
             <h2>안내 서비스</h2>
@@ -48,7 +48,7 @@ export default async function OrganizationDetailPage({ params }: Props) {
                 </li>
               ))}
             </ul>
-          </motion>
+          </div>
         )}
         <p style={{ marginTop: "2rem" }}>
           <Link href="/organizations">← 기관 목록</Link>
