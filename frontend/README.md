@@ -40,7 +40,7 @@ CLI 사용 시에도 프로젝트 루트는 `frontend` 폴더에서 실행하세
 
 - 홈·검색·기관 목록이 로드되는지 확인
 - 백엔드 **CORS**에 Vercel 도메인 추가 필요  
-  예: `https://your-app.vercel.app` → `backend`의 `WELFARE_CORS_ALLOWED_ORIGINS`
+  예: `https://bokjinaru.vercel.app` → `backend`의 `WELFARE_CORS_ALLOWED_ORIGINS`
 
 ### 빌드
 
